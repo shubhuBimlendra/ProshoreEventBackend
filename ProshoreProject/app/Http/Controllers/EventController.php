@@ -105,7 +105,7 @@ class EventController extends Controller
     {
         return Event::where('start_date', '>=', date('Y-m-d'))
             ->orderBy('start_date')
-            ->paginate(25);
+            ->paginate(10);
 
     }
 
@@ -114,21 +114,28 @@ class EventController extends Controller
     {
         return Event::where('end_date', '<', date('Y-m-d'))
             ->orderBy('end_date')
-            ->paginate(25);
+            ->paginate(10);
 
     }
 
     //function to get all the Finished events of the last 7 days
     public function lastFinishedEvent()
     {
+        /*$date = Carbon::now()->subDays(7);
+        return Event::where('created_at', '>=', $date)->get();*/
+
         $date = Carbon::now()->subDays(7);
-        return Event::where('created_at', '>=', $date)->get();
+        return Event::where('end_date', '<=', $date)
+             ->orderBy('end_date')
+             ->paginate(10);
     }
 
     //function to get all the Upcoming events within 7 days
     public function upcomingWeekEvent()
     {
         $date = Carbon::now()->subDays(7);
-        return Event::where('created_at', '<', $date)->get();
+        return Event::where('start_date', '>=', $date)
+             ->orderBy('start_date')
+             ->paginate(10);
     }
 }
